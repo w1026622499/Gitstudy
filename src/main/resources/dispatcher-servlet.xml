@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!--此文件负责整个mvc中的配置-->
+
+
+
+    <!-- 自动扫描装配 -->
+    <context:component-scan base-package="com.km"/>
+
+    <!--启用spring的一些annotation -->
+    <context:annotation-config/>
+
+    <!-- 配置注解驱动 可以将request参数与绑定到controller参数上 -->
+    <mvc:annotation-driven/>
+
+    <!--静态资源映射-->
+    <!--本项目把静态资源放在了webapp的statics目录下，资源映射如下-->
+    <mvc:resources mapping="/css/**" location="WEB-INF/statics/css/"/>
+    <mvc:resources mapping="/js/**" location="WEB-INF/statics/js/"/>
+    <mvc:resources mapping="/image/**" location="WEB-INF/statics/images/"/>
+    <mvc:default-servlet-handler />  <!--这句要加上，要不然可能会访问不到静态资源，具体作用自行百度-->
+
+    <!--视图解析器-->
+    <!-- 对模型视图名称的解析，即在模型视图名称添加前后缀(如果最后一个还是表示文件夹,则最后的斜杠不要漏了) 使用JSP-->
+    <!-- 默认的视图解析器 在上边的解析错误时使用 (默认使用html)- -->
+    <bean id="defaultViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/views/"></property>
+        <property name="suffix" value=".jsp"></property>
+    </bean>
+
+
+
+    <!-- 文件上传解析器-->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 上传文件大小上限，单位为字节（10MB） -->
+        <property name="maxUploadSize" value="500000" />
+        <!-- 请求的编码格式，必须和jSP的pageEncoding属性一致，以便正确读取表单的内容，默认为ISO-8859-1 -->
+        <property name="defaultEncoding" value="UTF-8" />
+    </bean>
+
+
+
+    <mvc:interceptors>
+        <!-- 配置登陆拦截器 -->
+        <mvc:interceptor>
+            <!-- /** 表示所有的url，包括子url路径 -->
+            <mvc:mapping path="/**" />
+            <!-- mvc:exclude-mapping过滤，js文件夹下的所有文件包括子路径的文件都不拦截 -->
+            <mvc:exclude-mapping path="/js/**"/>
+            <!-- 配置拦截类  （com.***.filter包名；LoginHandlerIntercepter类名）-->
+            <bean class="com.km.inteceptor.Inteceptor"></bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <!-- mvc:exclude-mapping配置的这里需要再配一次这个，主要是用来进行静态资源的访问，因为可以静态资源（css.js）收到拦截器影响而获取不到  -->
+    <mvc:resources location="WEB-INF/statics/js/" mapping="/js/**"/>
+</beans>

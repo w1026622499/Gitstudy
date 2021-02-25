@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.km.mapper">
+
+    <!-- 引用缓存和mapper共用一个  -->
+    <cache-ref namespace="com.km.mapper.UserMapper"/>
+<!--
+    namespace:命名空间  指定接口的全类名
+    id:唯一标识
+
+-->
+
+
+
+
+</mapper>
+
