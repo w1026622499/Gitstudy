@@ -24,7 +24,7 @@ public class Home {
 
     @RequestMapping("/index")
     public String index(String name){
-        System.out.println("kkkkkkkkkkkkkkkkkkkkkkkk");
+        System.out.println("kkkkkkkkeeekkkkkkk");
         return "sk";
     }
 
